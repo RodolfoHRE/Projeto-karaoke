@@ -1,0 +1,14 @@
+{
+  "name": "Projeto-karaoke",
+  "version": "1.0.0",
+  "description": "Hello World!",
+  "scripts": {
+    "dev": "electron ."
+  },
+  "main": "main.js",
+  "author": "Rodolfo HRE",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^31.1.0"
+  }
+}

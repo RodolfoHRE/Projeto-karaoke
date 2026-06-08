@@ -1,17 +1,115 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página com Imagem de Fundo</title>
+    <title>echo karaokê</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="bg">
-        <div class="content">
-            <h1>Bem-vindo</h1>
-            <p>Esta é uma página com uma imagem de fundo.</p>
+    <!-- ===== Splash ===== -->
+    <div class="splash" id="splash">
+        <div class="splash__mark">
+            <!-- logo echo (onda sonora) -->
+            <svg class="logo" viewBox="0 0 500 500" aria-label="echo" role="img">
+                <use href="#echo-logo"/>
+            </svg>
         </div>
+        <p class="splash__word"><span>echo</span><em>karaokê</em></p>
     </div>
+
+    <!-- ===== Símbolo reutilizável (def) ===== -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+        <defs>
+            <linearGradient id="g-arc-l" x1="135" y1="374" x2="250" y2="157" gradientUnits="userSpaceOnUse">
+                <stop offset="0.447" stop-color="#5124AF"/><stop offset="0.798" stop-color="#DF2F9E"/>
+            </linearGradient>
+            <linearGradient id="g-arc-r" x1="250" y1="144" x2="367" y2="374" gradientUnits="userSpaceOnUse">
+                <stop offset="0.198" stop-color="#DF2F9E"/><stop offset="0.647" stop-color="#2871E7"/>
+            </linearGradient>
+            <linearGradient id="g-bar" x1="250" y1="150" x2="250" y2="350" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#DF2F9E"/><stop offset="1" stop-color="#5124AF"/>
+            </linearGradient>
+            <g id="echo-logo" fill="none">
+                <path d="M250.307 83.7503L250.085 75C250.061 75 250.038 75 250.015 75C215.403 75 181.568 85.2636 152.79 104.493C124.011 123.722 101.581 151.053 88.3356 183.03C75.0903 215.007 71.6247 250.194 78.3771 284.141C85.1295 318.087 101.797 349.269 126.271 373.744C130.831 375.725 134.814 371.7 132.458 367.556C109.208 344.306 93.3738 314.683 86.959 282.434C80.5442 250.184 83.8365 216.757 96.4196 186.379C109.003 156.001 130.311 130.036 157.651 111.768C184.991 93.5004 217.133 83.75 250.015 83.75C250.112 83.75 250.21 83.7501 250.307 83.7503Z" stroke="url(#g-arc-l)" stroke-width="9"/>
+                <path d="M412.201 183.03C425.447 215.007 428.912 250.194 422.16 284.141C415.408 318.087 398.74 349.27 374.266 373.744C369.869 375.762 365.879 371.745 368.079 367.557C391.329 344.306 407.163 314.683 413.578 282.434C419.993 250.184 416.701 216.757 404.117 186.379C391.534 156.001 370.226 130.036 342.886 111.768C315.546 93.5004 283.404 83.75 250.523 83.75C250.469 83.75 250.415 83.75 250.361 83.7501L250 75.0008C250.174 75.0003 250.348 75 250.523 75C285.134 75 318.969 85.2636 347.747 104.493C376.526 123.722 398.956 151.053 412.201 183.03Z" stroke="url(#g-arc-r)" stroke-width="9"/>
+                <path class="eq eq4" d="M247.5 150V350.5" stroke="url(#g-bar)" stroke-width="25" stroke-linecap="round"/>
+                <path class="eq eq2" d="M216 183V318" stroke="url(#g-bar)" stroke-width="25" stroke-linecap="round"/>
+                <path class="eq eq6" d="M279 183V318" stroke="url(#g-bar)" stroke-width="25" stroke-linecap="round"/>
+                <path class="eq eq7" d="M311 215V285" stroke="url(#g-bar)" stroke-width="25" stroke-linecap="round"/>
+                <path class="eq eq3" d="M184 213V283" stroke="url(#g-bar)" stroke-width="25" stroke-linecap="round"/>
+                <path class="eq eq1" d="M153 240V261" stroke="url(#g-bar)" stroke-width="25" stroke-linecap="round"/>
+                <path class="eq eq5" d="M342 240V261" stroke="url(#g-bar)" stroke-width="25" stroke-linecap="round"/>
+            </g>
+        </defs>
+    </svg>
+
+    <!-- ===== Menu ===== -->
+    <section class="screen screen--menu is-active" data-screen="menu">
+        <div class="menu">
+            <div class="menu__brand">
+                <svg class="logo logo--lg" viewBox="0 0 500 500" aria-hidden="true"><use href="#echo-logo"/></svg>
+                <h1 class="wordmark"><span>echo</span><em>karaokê</em></h1>
+            </div>
+            <div class="menu__actions">
+                <button class="btn btn--primary" data-nav="busca">
+                    <span class="btn__icon">▶</span> Cantar agora
+                </button>
+                <div class="menu__row">
+                    <button class="btn" data-nav="busca"><span class="btn__icon">🔍</span> Buscar</button>
+                    <button class="btn" data-nav="fila"><span class="btn__icon">📋</span> Fila <span class="badge" data-queue-count>0</span></button>
+                </div>
+                <button class="btn btn--muted" disabled title="Em breve"><span class="btn__icon">⚙</span> Configurações</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Busca ===== -->
+    <section class="screen screen--busca" data-screen="busca">
+        <header class="topbar">
+            <button class="btn-icon" data-nav="menu" title="Voltar">←</button>
+            <svg class="logo logo--sm" viewBox="0 0 500 500" aria-hidden="true"><use href="#echo-logo"/></svg>
+            <h2 class="topbar__title">Buscar</h2>
+        </header>
+        <form class="search" id="search-form">
+            <input class="search__input" id="search-input" type="text"
+                   placeholder="Música, artista ou link/ID do YouTube" autocomplete="off">
+            <button class="btn btn--primary search__btn" type="submit">Buscar</button>
+        </form>
+        <p class="search__hint" id="search-hint"></p>
+        <ul class="results" id="results"></ul>
+    </section>
+
+    <!-- ===== Player ===== -->
+    <section class="screen screen--player" data-screen="player">
+        <div class="player__video" id="player-host"></div>
+        <div class="player__bar">
+            <button class="btn-icon" data-nav="menu" title="Menu">←</button>
+            <div class="player__now">
+                <span class="player__title" id="player-title">Nada tocando</span>
+                <span class="player__next" id="player-next"></span>
+            </div>
+            <div class="player__controls">
+                <button class="btn-icon" id="player-toggle" title="Pausar/Tocar">⏯</button>
+                <button class="btn-icon btn-icon--accent" id="player-skip" title="Pular">⏭</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Fila ===== -->
+    <section class="screen screen--fila" data-screen="fila">
+        <header class="topbar">
+            <button class="btn-icon" data-nav="menu" title="Voltar">←</button>
+            <svg class="logo logo--sm" viewBox="0 0 500 500" aria-hidden="true"><use href="#echo-logo"/></svg>
+            <h2 class="topbar__title">Fila</h2>
+        </header>
+        <ul class="queue" id="queue"></ul>
+        <div class="queue__empty" id="queue-empty">
+            <svg class="logo logo--ghost" viewBox="0 0 500 500" aria-hidden="true"><use href="#echo-logo"/></svg>
+            <p>Fila vazia. Busque uma música para começar a cantar.</p>
+        </div>
+    </section>
+
+    <script type="module" src="js/app.js"></script>
 </body>
 </html>

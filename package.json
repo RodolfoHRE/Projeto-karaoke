@@ -1,7 +1,7 @@
 {
-  "name": "Projeto-karaoke",
+  "name": "echo-karaoke",
   "version": "1.0.0",
-  "description": "Hello World!",
+  "description": "echo karaoke — app de karaokê desktop em Electron que toca vídeos do YouTube.",
   "scripts": {
     "dev": "electron ."
   },
@@ -9,6 +9,6 @@
   "author": "Rodolfo HRE",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^31.1.0"
+    "electron": "^42.3.0"
   }
 }

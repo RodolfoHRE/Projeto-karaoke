@@ -3,8 +3,23 @@
 
 const state = {
     queue: [],
-    current: null
+    current: null,
+    favorites: []      // [{ id, title, thumb }], persistido em arquivo via main (hydrateFavorites)
 };
+
+function persistFavorites() {
+    window.karaoke?.saveFavorites?.(state.favorites);
+}
+
+// Carrega favoritos do arquivo (userData) na inicialização. Async: ao resolver,
+// notifica os subscribers para re-renderizar a tela de Favoritos e os estados ★.
+export async function hydrateFavorites() {
+    const saved = await window.karaoke?.getFavorites?.();
+    if (Array.isArray(saved)) {
+        state.favorites = saved;
+        notify();
+    }
+}
 
 const listeners = new Set();
 
@@ -56,4 +71,28 @@ export function playNext() {
 
 export function peekNext() {
     return state.queue[0] || null;
+}
+
+// ===== Favoritos (persistidos em localStorage) =====
+
+export function isFavorite(id) {
+    return state.favorites.some(s => s.id === id);
+}
+
+export function addFavorite(song) {
+    if (!song || isFavorite(song.id)) return;
+    state.favorites.push({ id: song.id, title: song.title, thumb: song.thumb });
+    persistFavorites();
+    notify();
+}
+
+export function removeFavorite(id) {
+    state.favorites = state.favorites.filter(s => s.id !== id);
+    persistFavorites();
+    notify();
+}
+
+export function toggleFavorite(song) {
+    if (isFavorite(song.id)) removeFavorite(song.id);
+    else addFavorite(song);
 }

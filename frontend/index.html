@@ -44,6 +44,19 @@
         </defs>
     </svg>
 
+    <!-- ===== Titlebar custom (frameless) ===== -->
+    <div class="titlebar" id="titlebar">
+        <div class="titlebar__brand">
+            <svg class="logo logo--xs" viewBox="0 0 500 500" aria-hidden="true"><use href="#echo-logo"/></svg>
+            <span class="titlebar__title">echo karaokê</span>
+        </div>
+        <div class="titlebar__controls">
+            <button class="titlebar__btn" id="win-min" title="Minimizar" aria-label="Minimizar">—</button>
+            <button class="titlebar__btn" id="win-max" title="Maximizar" aria-label="Maximizar">▢</button>
+            <button class="titlebar__btn titlebar__btn--close" id="win-close" title="Fechar" aria-label="Fechar">✕</button>
+        </div>
+    </div>
+
     <!-- ===== Menu ===== -->
     <section class="screen screen--menu is-active" data-screen="menu">
         <div class="menu">
@@ -52,14 +65,15 @@
                 <h1 class="wordmark"><span>echo</span><em>karaokê</em></h1>
             </div>
             <div class="menu__actions">
-                <button class="btn btn--primary" data-nav="busca">
+                <button class="btn btn--primary" id="btn-cantar">
                     <span class="btn__icon">▶</span> Cantar agora
                 </button>
                 <div class="menu__row">
                     <button class="btn" data-nav="busca"><span class="btn__icon">🔍</span> Buscar</button>
+                    <button class="btn" data-nav="favoritos"><span class="btn__icon">★</span> Favoritos</button>
                     <button class="btn" data-nav="fila"><span class="btn__icon">📋</span> Fila <span class="badge" data-queue-count>0</span></button>
                 </div>
-                <button class="btn btn--muted" disabled title="Em breve"><span class="btn__icon">⚙</span> Configurações</button>
+                <button class="btn btn--muted" data-nav="config"><span class="btn__icon">⚙</span> Configurações</button>
             </div>
         </div>
     </section>
@@ -107,6 +121,62 @@
         <div class="queue__empty" id="queue-empty">
             <svg class="logo logo--ghost" viewBox="0 0 500 500" aria-hidden="true"><use href="#echo-logo"/></svg>
             <p>Fila vazia. Busque uma música para começar a cantar.</p>
+        </div>
+    </section>
+
+    <!-- ===== Favoritos ===== -->
+    <section class="screen screen--favoritos" data-screen="favoritos">
+        <header class="topbar">
+            <button class="btn-icon" data-nav="menu" title="Voltar">←</button>
+            <svg class="logo logo--sm" viewBox="0 0 500 500" aria-hidden="true"><use href="#echo-logo"/></svg>
+            <h2 class="topbar__title">Favoritos</h2>
+        </header>
+        <ul class="results" id="favorites"></ul>
+        <div class="queue__empty" id="favorites-empty">
+            <svg class="logo logo--ghost" viewBox="0 0 500 500" aria-hidden="true"><use href="#echo-logo"/></svg>
+            <p>Nenhuma música favoritada ainda. Marque com ★ na busca ou na fila.</p>
+        </div>
+    </section>
+
+    <!-- ===== Configurações / Setup da chave ===== -->
+    <section class="screen screen--config" data-screen="config">
+        <header class="topbar">
+            <button class="btn-icon" data-nav="menu" title="Voltar">←</button>
+            <svg class="logo logo--sm" viewBox="0 0 500 500" aria-hidden="true"><use href="#echo-logo"/></svg>
+            <h2 class="topbar__title">Configurações</h2>
+        </header>
+
+        <div class="config">
+            <div class="config__welcome is-hidden" id="config-welcome">
+                <h3>Bem-vindo ao echo karaokê 🎤</h3>
+                <p>Pra buscar músicas por nome você precisa de uma chave gratuita da YouTube Data API.
+                   Leva ~2 min. Ou pule e use colando links/IDs do YouTube.</p>
+            </div>
+
+            <ol class="config__steps">
+                <li>Abra o Google Cloud no botão abaixo e crie um projeto.</li>
+                <li>Habilite a <strong>YouTube Data API v3</strong> (a página já abre nela).</li>
+                <li>Vá em <strong>Credenciais → Criar credenciais → Chave de API</strong>.</li>
+                <li>Copie a chave e cole aqui embaixo.</li>
+            </ol>
+
+            <button class="btn btn--primary" id="config-open-cloud">
+                <span class="btn__icon">🔗</span> Abrir Google Cloud
+            </button>
+
+            <form class="config__form" id="config-form">
+                <input class="search__input" id="config-key" type="text"
+                       placeholder="Cole sua chave da API aqui" autocomplete="off" spellcheck="false">
+                <button class="btn btn--primary" id="config-save" type="submit">Validar e salvar</button>
+            </form>
+            <p class="config__status" id="config-status"></p>
+
+            <div class="config__current is-hidden" id="config-current">
+                <span id="config-current-label">✓ Chave configurada</span>
+                <button class="btn btn--muted" id="config-remove">Remover chave</button>
+            </div>
+
+            <button class="btn btn--ghost is-hidden" id="config-skip">Pular por agora</button>
         </div>
     </section>
 

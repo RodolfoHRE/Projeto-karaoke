@@ -1,5 +1,5 @@
 // Render da tela Fila: lista, reordenar, remover, tocar agora.
-import { subscribe, removeAt, move } from './store.js';
+import { subscribe, removeAt, move, toggleFavorite, isFavorite } from './store.js';
 import { playSong } from './player.js';
 
 export function initQueue() {
@@ -20,18 +20,21 @@ export function initQueue() {
             li.innerHTML = `
                 <span class="queue__title"></span>
                 <div class="queue__actions">
+                    <button class="queue__btn queue__btn--fav" data-act="fav" title="Favoritar">★</button>
                     <button class="queue__btn" data-act="up" title="Subir">▲</button>
                     <button class="queue__btn" data-act="down" title="Descer">▼</button>
                     <button class="queue__btn queue__btn--play" data-act="play" title="Tocar agora">▶</button>
                     <button class="queue__btn queue__btn--del" data-act="del" title="Remover">✕</button>
                 </div>`;
             li.querySelector('.queue__title').textContent = song.title;
+            li.querySelector('[data-act="fav"]').classList.toggle('is-active', isFavorite(song.id));
 
             li.addEventListener('click', e => {
                 const act = e.target.closest('[data-act]')?.dataset.act;
                 if (act === 'up') move(i, -1);
                 else if (act === 'down') move(i, 1);
                 else if (act === 'del') removeAt(i);
+                else if (act === 'fav') toggleFavorite(song);
                 else if (act === 'play') { removeAt(i); playSong(song); }
             });
 

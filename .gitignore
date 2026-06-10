@@ -1,6 +1,7 @@
 node_modules/
 .superpowers/
 .env
+dist/
 
 # Contexto local (não versionar)
 CLAUDE.md

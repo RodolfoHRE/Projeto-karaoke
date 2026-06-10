@@ -1,8 +1,10 @@
 // Busca de músicas no YouTube.
 // - Se o texto for um link/ID do YouTube: resolve direto, sem chave.
-// - Caso contrário: usa a YouTube Data API v3 (precisa da chave do .env).
-// A chave é injetada pelo preload em window.karaoke.ytApiKey.
-const apiKey = () => (window.karaoke && window.karaoke.ytApiKey) || '';
+// - Caso contrário: usa a YouTube Data API v3 (precisa de chave).
+// A chave efetiva (usuário > .env) vem de apikey.js.
+import { getKey, hasKey } from './apikey.js';
+
+export { hasKey as hasApiKey };
 
 const ID_RE = /^[a-zA-Z0-9_-]{11}$/;
 
@@ -27,10 +29,6 @@ export function parseVideoId(text) {
     return null;
 }
 
-export function hasApiKey() {
-    return Boolean(apiKey());
-}
-
 const thumbFor = id => `https://i.ytimg.com/vi/${id}/mqdefault.jpg`;
 
 // Busca por texto. Retorna array de { id, title, thumb }.
@@ -41,7 +39,7 @@ export async function search(query) {
         return [{ id: directId, title: `Vídeo ${directId}`, thumb: thumbFor(directId) }];
     }
 
-    const key = apiKey();
+    const key = getKey();
     if (!key) {
         const err = new Error('no-key');
         err.code = 'no-key';

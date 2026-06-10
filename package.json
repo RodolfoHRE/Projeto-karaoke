@@ -3,12 +3,35 @@
   "version": "1.0.0",
   "description": "echo karaoke — app de karaokê desktop em Electron que toca vídeos do YouTube.",
   "scripts": {
-    "dev": "electron ."
+    "dev": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
   },
   "main": "main.js",
   "author": "Rodolfo HRE",
   "license": "MIT",
+  "build": {
+    "appId": "com.rodolfohre.echo-karaoke",
+    "productName": "echo karaoke",
+    "files": [
+      "main.js",
+      "frontend/**/*",
+      "img/**/*",
+      "package.json"
+    ],
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "icon": "build/icon.png",
+      "category": "AudioVideo",
+      "maintainer": "Rodolfo HRE <rodolfohre@gmail.com>",
+      "syncDesktopName": true
+    }
+  },
   "devDependencies": {
-    "electron": "^42.3.0"
+    "electron": "^42.3.0",
+    "electron-builder": "^26.15.2"
   }
 }

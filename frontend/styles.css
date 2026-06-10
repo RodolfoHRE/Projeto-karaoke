@@ -41,6 +41,8 @@
 
     --display: 'Clash Display', system-ui, sans-serif;
     --body: 'General Sans', system-ui, sans-serif;
+
+    --titlebar-h: 34px;
 }
 
 /* ===================== Reset / fix do scroll ===================== */
@@ -52,31 +54,52 @@ html, body {
 }
 button { font-family: inherit; color: inherit; }
 
+/* ===================== Titlebar custom (frameless) ===================== */
+.titlebar {
+    position: fixed; top: 0; left: 0; right: 0; height: var(--titlebar-h); z-index: 50;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 6px 0 12px; background: oklch(0.13 0.02 295);
+    border-bottom: 1px solid var(--border);
+    -webkit-app-region: drag;       /* área arrastável da janela */
+    user-select: none;
+}
+.titlebar__brand { display: flex; align-items: center; gap: 8px; }
+.titlebar__title { font-size: 12px; color: var(--text-dim); letter-spacing: 0.02em; white-space: nowrap; }
+.titlebar__controls { display: flex; gap: 2px; -webkit-app-region: no-drag; }
+.titlebar__btn {
+    width: 40px; height: 28px; border: none; background: transparent; color: var(--text-dim);
+    border-radius: 7px; cursor: pointer; font-size: 13px;
+    transition: background 0.14s ease, color 0.14s ease;
+}
+.titlebar__btn:hover { background: var(--surface-2); color: var(--text); }
+.titlebar__btn--close:hover { background: oklch(0.55 0.2 25); color: #fff; }
+
 /* ===================== Telas (SPA) ===================== */
 .screen {
-    position: absolute; inset: 0; height: 100vh; width: 100vw;
+    position: absolute; inset: var(--titlebar-h) 0 0 0;
     display: none; flex-direction: column;
 }
 .screen.is-active { display: flex; }
 
 /* Fundo: foto tratada com scrim escuro + tint da marca */
-.screen--menu, .screen--busca, .screen--fila {
+.screen--menu, .screen--busca, .screen--fila, .screen--favoritos, .screen--config {
     background: var(--bg);
     position: absolute;
 }
-.screen--menu::before, .screen--busca::before, .screen--fila::before {
+.screen--menu::before, .screen--busca::before, .screen--fila::before, .screen--favoritos::before, .screen--config::before {
     content: ''; position: absolute; inset: 0; z-index: 0;
     background:
         radial-gradient(120% 90% at 50% -10%, oklch(0.40 0.20 295 / 0.55), transparent 60%),
         linear-gradient(180deg, oklch(0.16 0.02 295 / 0.72), oklch(0.16 0.02 295 / 0.92)),
         url('../img/background.jpg') center / cover no-repeat fixed;
 }
-.screen--menu > *, .screen--busca > *, .screen--fila > * { position: relative; z-index: 1; }
+.screen--menu > *, .screen--busca > *, .screen--fila > *, .screen--favoritos > *, .screen--config > * { position: relative; z-index: 1; }
 
 /* ===================== Logo (onda sonora) ===================== */
 .logo { width: 100%; height: 100%; display: block; overflow: visible; }
 .logo--lg { width: 132px; height: 132px; filter: drop-shadow(0 8px 30px oklch(0.61 0.235 354 / 0.4)); }
 .logo--sm { width: 30px; height: 30px; }
+.logo--xs { width: 18px; height: 18px; }
 .logo--ghost { width: 96px; height: 96px; opacity: 0.5; }
 
 /* Barras do equalizer pulsando (escala vertical no centro) */
@@ -230,6 +253,8 @@ button { font-family: inherit; color: inherit; }
 }
 .result__btn:hover { transform: translateY(-2px); }
 .result__btn--play { border: none; background: var(--brand-gradient); color: oklch(0.99 0.01 320); }
+.result__btn--fav { color: var(--text-dim); padding: 10px 13px; }
+.result__btn--fav.is-active { color: var(--brand-magenta); border-color: var(--brand-magenta); }
 
 /* ===================== Player ===================== */
 .screen--player { background: oklch(0.10 0.015 295); }
@@ -265,6 +290,8 @@ button { font-family: inherit; color: inherit; }
 .queue__btn:hover { transform: translateY(-2px); }
 .queue__btn--play { border: none; background: var(--brand-gradient); color: oklch(0.99 0.01 320); }
 .queue__btn--del:hover { background: oklch(0.45 0.18 12); }
+.queue__btn--fav { color: var(--text-dim); }
+.queue__btn--fav.is-active { color: var(--brand-magenta); border-color: var(--brand-magenta); }
 
 .queue__empty {
     margin: auto; display: flex; flex-direction: column; align-items: center; gap: 18px;
@@ -272,6 +299,37 @@ button { font-family: inherit; color: inherit; }
 }
 .queue__empty.is-hidden { display: none; }
 .queue__empty p { margin: 0; font-size: 16px; line-height: 1.45; }
+
+/* ===================== Configurações / Setup da chave ===================== */
+.is-hidden { display: none !important; }
+
+.config {
+    margin: 12px auto 0; padding: 0 24px 28px; width: 100%; max-width: 620px;
+    display: flex; flex-direction: column; gap: 18px; overflow-y: auto;
+}
+.config__welcome {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 18px 20px;
+}
+.config__welcome h3 { margin: 0 0 6px; font-family: var(--display); font-weight: 600; font-size: 20px; }
+.config__welcome p { margin: 0; color: var(--text-dim); line-height: 1.5; }
+.config__steps {
+    margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 8px;
+    color: var(--text-dim); line-height: 1.45;
+}
+.config__steps strong { color: var(--text); }
+.config__form { display: flex; gap: 12px; }
+.config__form .search__input { flex: 1; }
+.config__status { margin: 0; font-size: 14px; min-height: 18px; color: var(--text-dim); }
+.config__status--ok { color: oklch(0.78 0.16 150); }
+.config__status--err { color: oklch(0.7 0.19 25); }
+.config__current {
+    display: flex; align-items: center; justify-content: space-between; gap: 14px;
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 14px 18px; font-weight: 500;
+}
+.btn--ghost { background: transparent; border: 1px solid transparent; color: var(--text-dim); }
+.btn--ghost:hover { color: var(--text); background: var(--surface-2); }
 
 /* ===================== Movimento reduzido ===================== */
 @media (prefers-reduced-motion: reduce) {

@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, ipcMain, Menu, shell } = require('electron')
 const path = require('path')
 const fs = require('fs')
 const http = require('http')
@@ -81,6 +81,8 @@ function createWindow() {
         minWidth: 800,
         minHeight: 600,
         backgroundColor: '#1a0b2e',
+        frame: false,
+        icon: path.join(__dirname, 'build', 'icon.png'),
         webPreferences: {
             preload: path.join(__dirname, 'frontend', 'preload.js'),
             contextIsolation: true,
@@ -94,7 +96,48 @@ function createWindow() {
     main_window.loadURL(`http://127.0.0.1:${serverPort}/frontend/index.html`)
 }
 
+// Persistência simples de favoritos: arquivo JSON no userData.
+// Independe da porta efêmera do servidor (origin muda a cada boot, então
+// localStorage não serve). Lido/escrito só pelo processo principal via IPC.
+function registerFavoritesIpc() {
+    const favPath = path.join(app.getPath('userData'), 'favorites.json')
+    ipcMain.handle('favorites:load', () => {
+        try { return JSON.parse(fs.readFileSync(favPath, 'utf8')) } catch { return [] }
+    })
+    ipcMain.handle('favorites:save', (_e, list) => {
+        try { fs.writeFileSync(favPath, JSON.stringify(list)); return true } catch { return false }
+    })
+}
+
+// Persistência da chave da YouTube API (escolhida pelo usuário) + abrir links.
+function registerApiKeyIpc() {
+    const keyPath = path.join(app.getPath('userData'), 'apikey.json')
+    ipcMain.handle('apikey:load', () => {
+        try { return JSON.parse(fs.readFileSync(keyPath, 'utf8')).key || '' } catch { return '' }
+    })
+    ipcMain.handle('apikey:save', (_e, k) => {
+        try { fs.writeFileSync(keyPath, JSON.stringify({ key: k })); return true } catch { return false }
+    })
+    ipcMain.on('open-external', (_e, url) => {
+        if (typeof url === 'string' && url.startsWith('https://')) shell.openExternal(url)
+    })
+}
+
+// Controles da janela frameless (titlebar custom no renderer).
+function registerWindowIpc() {
+    ipcMain.on('window:minimize', (e) => BrowserWindow.fromWebContents(e.sender)?.minimize())
+    ipcMain.on('window:toggle-max', (e) => {
+        const w = BrowserWindow.fromWebContents(e.sender)
+        if (w?.isMaximized()) w.unmaximize(); else w?.maximize()
+    })
+    ipcMain.on('window:close', (e) => BrowserWindow.fromWebContents(e.sender)?.close())
+}
+
 app.whenReady().then(async () => {
+    Menu.setApplicationMenu(null)        // sem menu nativo File/Edit/View/Window
+    registerFavoritesIpc()
+    registerWindowIpc()
+    registerApiKeyIpc()
     await startServer()
     createWindow()
 

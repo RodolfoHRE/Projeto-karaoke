@@ -43,6 +43,7 @@ export function enqueue(song) {
 }
 
 export function removeAt(index) {
+    if (index < 0 || index >= state.queue.length) return;
     state.queue.splice(index, 1);
     notify();
 }

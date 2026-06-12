@@ -5,3 +5,8 @@ dist/
 
 # Contexto local (não versionar)
 CLAUDE.md
+
+# Testes locais (não versionar)
+tests/
+vitest.config.js
+coverage/

@@ -53,7 +53,7 @@ function startServer() {
             const resolved = path.normalize(path.join(root, urlPath))
 
             // Guard contra path traversal: tem que ficar dentro da raiz.
-            if (!resolved.startsWith(root)) {
+            if (resolved !== root && !resolved.startsWith(root + path.sep)) {
                 res.writeHead(403); res.end('Forbidden'); return
             }
 
